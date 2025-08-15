@@ -20,7 +20,7 @@ const Header = () => {
 
     const navigate = useNavigate();
 
-    const {user , fetchUser} = UrlState();
+    const {user , fetchUser, setUser} = UrlState();
 
     const {loading, fn:fnLogout} = UseFetch(logout);
     
@@ -53,12 +53,13 @@ const Header = () => {
     <DropdownMenuItem className='text-red-400'>
         <LogOut className="mr-2 h-4 w-4 "/>
         <span
-          onClick={() => {
-            fnLogout();
+          onClick={async () => {
+            await fnLogout();
+            // proactively clear user for instant UI update
+            setUser(null);
+            await fetchUser();
             navigate("/");
-            
-          }
-          }
+          }}
         >
           Logout
           </span>

@@ -15,6 +15,7 @@ import {useNavigate, useSearchParams} from "react-router-dom";
 import {signup} from "@/db/apiAuth";
 import {BeatLoader} from "react-spinners";
 import UseFetch from '@/hooks/UseFetch';
+import { UrlState } from '@/Context';
 
 const Signup = () => {
   let [searchParams] = useSearchParams();
@@ -23,6 +24,7 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const [errors, setErrors] = useState({});
+  const [infoMessage, setInfoMessage] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -39,13 +41,16 @@ const Signup = () => {
   };
 
   const {loading, error, fn: fnSignup, data} = UseFetch(signup, formData);
+  const { fetchUser } = UrlState();
 
-  useEffect(() => {
-    if (!error && data) {
+   useEffect(() => {
+    if (data) {
+      
+      fetchUser();
       navigate(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [error, data, longLink, navigate]);
+  }, [data]);
 
   const handleSignup = async () => {
     setErrors([]);
@@ -85,6 +90,9 @@ const Signup = () => {
           Create a new account if you haven&rsquo;t already
         </CardDescription>
         {error && <Error message={error?.message} />}
+        {infoMessage && (
+          <p className="text-sm text-blue-600 mt-2">{infoMessage}</p>
+        )}
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="space-y-1">

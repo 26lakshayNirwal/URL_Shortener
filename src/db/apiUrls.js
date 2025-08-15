@@ -13,7 +13,6 @@ export async function getUrls(user_id) {
 
   return data;
 }
-
 export async function getUrl({id, user_id}) {
   const {data, error} = await supabase
     .from("urls")

@@ -1,5 +1,5 @@
 import { UrlState } from '@/Context';
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Dialog,
@@ -16,6 +16,8 @@ import { Card } from './ui/card';
 import UseFetch from '@/hooks/UseFetch';
 import { createUrl } from '@/db/apiUrls';
 import * as yup from "yup";
+import QRCode from 'react-qrcode-logo';
+import { BeatLoader } from 'react-spinners';
 
 const CreateLink = () => {
 
@@ -50,13 +52,42 @@ const CreateLink = () => {
     });
   };
 
-
   const {
     loading,
     error,
     data,
     fn: fnCreateUrl,
   } = UseFetch(createUrl, {...formValues, user_id: user.id});
+
+  useEffect(() => {
+    if (error === null && data) {
+      navigate(`/link/${data[0].id}`);
+    }
+    
+  }, [error, data]);
+
+
+  
+
+  const createNewLink = async () => {
+    setErrors([]);
+    try {
+      await schema.validate(formValues, {abortEarly: false});
+
+      const canvas = ref.current.canvasRef.current;
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve));
+
+      await fnCreateUrl(blob);
+    } catch (e) {
+      const newErrors = {};
+
+      e?.inner?.forEach((err) => {
+        newErrors[err.path] = err.message;
+      });
+
+      setErrors(newErrors);
+    }
+  };
 
   return (
     
@@ -73,6 +104,11 @@ const CreateLink = () => {
     <DialogHeader>
       <DialogTitle className="font-bold text-2xl">Create New</DialogTitle>
     </DialogHeader>
+
+    {formValues?.longUrl && (
+          <QRCode ref={ref} size={250} value={formValues?.longUrl} />
+        )}
+
     <Input
           id="title"
           placeholder="Short Link's Title"
@@ -95,12 +131,13 @@ const CreateLink = () => {
             onChange={handleChange}
           />
         </div>
+        {error && <Error message={errors.message} />}
         <DialogFooter>
           <Button
             type="button"
             variant="default"
-            // onClick={createNewLink}
-            // disabled={loading}
+            onClick={createNewLink}
+            disabled={loading}
           >
             {loading ? <BeatLoader size={10} color="white" /> : "Create"}
           </Button>
