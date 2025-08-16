@@ -10,6 +10,7 @@ import { BarLoader, BeatLoader } from 'react-spinners';
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import LocationStats from '@/components/LocationStats';
 import DeviceStats from '@/components/DeviceStats';
+import { SITE_URL } from "@/config";
 
 const Link = () => {
   const navigate = useNavigate();
@@ -79,11 +80,11 @@ const Link = () => {
             {url?.title}
           </span>
           <a
-            href={`https://trimrr.in/${link}`}
+            href={`${SITE_URL.replace(/\/$/, '')}/${link}`}
             target="_blank"
             className="text-3xl sm:text-4xl text-blue-400 font-bold hover:underline cursor-pointer"
           >
-            https://trimrr.in/{link}
+            {`${SITE_URL.replace(/\/$/, '')}/${link}`}
           </a>
           <a
             href={url?.original_url}
@@ -100,7 +101,7 @@ const Link = () => {
             <Button
               variant="ghost"
               onClick={() =>
-                navigator.clipboard.writeText(`https://trimrr.in/${link}`)
+                navigator.clipboard.writeText(`${SITE_URL.replace(/\/$/, '')}/${link}`)
               }
             >
               <Copy />

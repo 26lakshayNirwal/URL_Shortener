@@ -18,6 +18,7 @@ import { createUrl } from '@/db/apiUrls';
 import * as yup from "yup";
 import QRCode from 'react-qrcode-logo';
 import { BeatLoader } from 'react-spinners';
+import { SITE_HOST } from "@/config";
 
 const CreateLink = () => {
 
@@ -123,7 +124,7 @@ const CreateLink = () => {
           onChange={handleChange}
         />
         <div className="flex items-center gap-2">
-          <Card className="p-2">trimrr.in</Card> /
+          <Card className="p-2">{SITE_HOST}</Card> /
           <Input
             id="customUrl"
             placeholder="Custom Link (optional)"
