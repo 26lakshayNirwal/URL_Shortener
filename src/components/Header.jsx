@@ -34,7 +34,7 @@ const Header = () => {
     };
     const scheduleClose = () => {
       if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
-      closeTimerRef.current = setTimeout(() => setMenuOpen(false), 500);
+      closeTimerRef.current = setTimeout(() => setMenuOpen(false), 700);
     };
 
     React.useEffect(() => {
