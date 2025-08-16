@@ -24,6 +24,31 @@ const Header = () => {
 
     const {loading, fn:fnLogout} = UseFetch(logout);
     
+    const [menuOpen, setMenuOpen] = React.useState(false);
+    const closeTimerRef = React.useRef(null);
+    const cancelClose = () => {
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+        closeTimerRef.current = null;
+      }
+    };
+    const scheduleClose = () => {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = setTimeout(() => setMenuOpen(false), 500);
+    };
+
+    React.useEffect(() => {
+      return () => {
+        if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+      };
+    }, []);
+
+    // Ensure menu is closed when auth state changes (e.g., after login)
+    React.useEffect(() => {
+      cancelClose();
+      setMenuOpen(false);
+    }, [user]);
+    
   return (
     <>
     <nav className=' py-4 flex justify-between items-center'>
@@ -34,14 +59,14 @@ const Header = () => {
        {!user ? (
         <Button onClick={()=>navigate("/auth")}>Login</Button>
        ):(
-        <DropdownMenu>
-  <DropdownMenuTrigger className="w-10 rounded-full overflow-hidden">
+        <DropdownMenu open={menuOpen}>
+  <DropdownMenuTrigger className="w-10 rounded-full overflow-hidden" onClick={() => setMenuOpen((v) => !v)} onPointerEnter={cancelClose} onPointerLeave={scheduleClose}>
     <Avatar>
   <AvatarImage src={user?.user_metadata?.profile_pic} className="object-contain"/>
   <AvatarFallback>LN</AvatarFallback>
 </Avatar>
   </DropdownMenuTrigger>
-  <DropdownMenuContent>
+  <DropdownMenuContent onPointerEnter={cancelClose} onPointerLeave={scheduleClose} onEscapeKeyDown={() => setMenuOpen(false)} onPointerDownOutside={() => setMenuOpen(false)}>
     <DropdownMenuLabel>{user?.user_metadata?.name}</DropdownMenuLabel>
     <DropdownMenuSeparator />
     <DropdownMenuItem>
