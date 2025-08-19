@@ -1,6 +1,6 @@
 # URL Shortener (React + Vite + Supabase)
 
-A modern URL shortener with custom aliases, QR code generation, and click analytics (device and geolocation). Built with React, Vite, Tailwind CSS, Radix UI, and Supabase.
+A modern URL shortener with custom aliases, QR code generation, and click analytics (device and geolocation). Built with React, Vite, Tailwind CSS, Shadcn UI, and Supabase.
 
 ## Features
 
