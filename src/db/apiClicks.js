@@ -33,9 +33,10 @@ const parser = new UAParser();
 export const storeClicks = async ({id, originalUrl}) => {
   try {
     const res = parser.getResult();
-    
-    const device = res.type; // Default to desktop if type is not detected
-     
+    // UAParser provides device type under res.device.type; undefined means desktop
+    const device = (res && res.device && res.device.type) ? res.device.type : "desktop";
+   // console.log(device);
+
     const response = await fetch("https://ipapi.co/json");
     const {city, country_name: country} = await response.json();
 

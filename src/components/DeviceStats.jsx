@@ -8,8 +8,9 @@ const DeviceStats = ({ stats }) => {
 
   // Aggregate counts by device
   const deviceCount = safeStats.reduce((acc, item) => {
-    if (!acc[item.device]) acc[item.device] = 0;
-    acc[item.device]++;
+    const key = (item && item.device) ? item.device : 'Desktop';
+    if (!acc[key]) acc[key] = 0;
+    acc[key]++;
     return acc;
   }, {});
 
